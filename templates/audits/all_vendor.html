@@ -1,0 +1,36 @@
+{% extends "base.html" %} 
+
+{% block title %} 
+Vendors 
+{% endblock %} 
+
+{% block content %}
+<a class="btn btn-secondary btn-sm text-center" href="{% url 'audits:create-vendor' %}">Create Vendor</a>
+<div class="content">
+
+  {% if messages %}
+    {% for message in messages %}
+      <div>{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+    
+    {% for vendor in vendors %}
+    <div class="card card-body">
+      
+      <p class="article-content"><strong>Created by:</strong> {{ vendor.user }}</p>
+      <h2><a class="article-title" href="{% url 'audits:vendor-detail' vendor.id %}"><strong>Vendor:</strong> {{ vendor.name }}</a></h2>
+      <p class="article-content"><strong>Representative:</strong> {{ vendor.representative }}</p>
+      <p class="article-content"><strong>Designation:</strong> {{ vendor.designation }}</p>
+      <p class="article-content"><strong>Contact Number:</strong> {{ vendor.contact }}</p>
+      <p class="article-content"><strong>Email:</strong> {{ vendor.email }}</p>
+      
+      <div>
+        <a class="btn btn-primary btn-sm" href="{% url 'audits:update-vendor' vendor.id %}">Update Vendor</a>
+        <a class="btn btn-danger btn-sm" href="{% url 'audits:delete-vendor' vendor.id %}">Delete Vendor</a>
+      </div>
+    </div>
+
+    {% endfor %}
+</div>
+
+{% endblock %}

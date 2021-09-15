@@ -1,0 +1,69 @@
+{% load static %} 
+{% load bootstrap4 %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@1,200&display=swap" rel="stylesheet" /> {% bootstrap_css %}
+
+  <link rel="stylesheet" type="" href="{% static 'css/styles.css' %}" />
+  
+
+    
+  <title>Starsight | {% block title %}{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200&display=swap" rel="stylesheet">
+    
+</head>
+
+<body>
+    <!--Navbar-->
+    
+    <div class="grid-container">
+      <header>
+        {% include 'partials/_navbar.html' %}
+      </header>
+      <main id="main_container">
+
+        <ul class="u-nav-links">
+          {% if request.user.is_authenticated and request.user.is_staff %}
+          <li><a href="{% url 'index' %}">Home</a></li>
+          <li><a href="{% url 'audits:index' %}">Manage</a></li>
+          <li><a href="{% url 'audits:client' %}">All Clients</a></li>
+          <li><a href="{% url 'audits:site' %}">All Sites</a></li>
+          <li><a href="{% url 'audits:all-vendor' %}">All Vendors</a></li>
+          {% elif request.user.is_authenticated %}
+          <li><a href="{% url 'index' %}">Home</a></li>
+          <li><a href="{% url 'audits:all-vendor' %}">Vendor Account</a></li>
+
+          {% endif %}
+        </ul>
+        {% block content %} 
+    
+        {% endblock %} 
+      </main>
+      <footer>
+        All right reserved @2021
+      </footer>
+    </div>
+
+
+    
+    
+    
+
+
+    <script type="text/javascript" src="{% static 'js/vendor.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+  </body>
+</html>
+
+
+
+
+

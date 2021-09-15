@@ -1,0 +1,42 @@
+{% extends 'base.html' %} 
+
+{% block title %}
+    Clients
+{% endblock title %}
+    
+
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+     <div class="alert alert-success" role="alert">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+    
+<a class="btn btn-secondary btn-sm" href="{% url 'audits:create-client' %}">Create Client</a> 
+<div class="content">
+    
+    {% for client in clients %}
+
+    <div class="card card-body">
+
+        
+        <a class="mr-2" href="#"><strong>User:</strong> {{ client.user }}</a>
+        <small class="text-muted"><strong>Date Created:</strong> {{ client.date_created|date:"F d, Y"}}</small>
+        
+        <h2><a class="article-title" href="{% url 'audits:client-detail' client.id %}"><strong>Client:</strong> {{ client.name }}</a></h2>
+        <p class="article-content"><strong>Contact:</strong> {{ client.rep_name }}</p>
+        <p class="article-content"><strong>Designation:</strong> {{ client.designation }}</p>
+        <p class="article-content"><strong>Phone:</strong> {{ client.phone }}</p>
+        <p class="article-content"><strong>Email:</strong> {{ client.email }}</p>
+        <div>
+            <a class="btn btn-primary btn-sm" href="{% url 'audits:update-client' client.id %}">Update Client</a>
+            <a class="btn btn-danger btn-sm" href="{% url 'audits:delete-client' client.id %}">Delete Client</a>
+        </div>
+
+    </div>
+
+    {% endfor %}
+</div>
+
+{% endblock %}

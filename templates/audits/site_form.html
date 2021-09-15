@@ -1,0 +1,19 @@
+{% extends "base.html" %} 
+
+{% load crispy_forms_tags %} 
+
+{% block content %}
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-danger" role="alert">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+<form action="" method="POST">
+    {% csrf_token %}
+    {{form|crispy}}
+
+    <a class="btn btn-outline-info btn-sm" href="{% url 'audits:site' %}">Return Back</a>
+    <input type="submit" value="Sumbit">
+</form>
+
+{% endblock %}

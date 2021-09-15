@@ -1,0 +1,24 @@
+{% extends 'base.html' %} 
+
+
+{% block title %}
+  Home
+{% endblock title %}
+  
+
+{% block content %}
+
+<div class="card text-center">
+    <div class="card-body">
+      <h1>Welcome to Starsight Audits Management Page</h1>
+      {% if request.user.is_authenticated and request.user.is_staff %}
+        <a class="btn btn-dark btn-sm" href="{% url 'audits:index' %}">Go to Audits</a>
+      {% elif request.user.is_authenticated %}
+        <a class="btn btn-dark btn-sm" href="{% url 'audits:checklist' %}">Checklist for Banks</a> 
+        <a class="btn btn-dark btn-sm" href="{% url 'audits:checklist-two' %}">Checklist for Fuel and Gas Station</a> 
+        <a class="btn btn-dark btn-sm" href="{% url 'audits:checklist-three' %}">C&I Checklist</a> 
+      {% endif %}
+    </div>
+</div>
+
+{% endblock %}

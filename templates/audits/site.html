@@ -1,0 +1,67 @@
+{% extends "base.html" %} 
+
+
+{% block title %}
+    Sites List
+{% endblock title %}
+    
+
+
+{% block content %}
+
+
+<hr>
+
+{% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-success" role="alert">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+    {% csrf_token %} 
+<div class="card card-body">
+    <div>
+        <a class="btn btn-secondary btn-sm" href="{% url 'audits:create-site' %}">Create Site</a>
+        <a class="btn btn-secondary btn-sm" href="{% url 'audits:create-schedule' %}">Create Schedule</a>
+    </div>
+    <table class="table table-striped table-hover table-sm">
+        <tr>
+            <th>Clients</th>
+            <th>Branch</th>
+            <th>Address</th>
+            <th>State</th>
+            <th>Region</th>
+            <th>Contact Person</th>
+            <th>Designation</th>
+            <th>Email</th>
+            <th>Contact Number</th>
+            <th>Date Created</th>
+            <th></th>
+            <th></th>
+        </tr>
+        {% for site in sites %}
+        <tr>
+            <td>{{site.client}}</td>
+            <td>{{site.name}}</td>
+            <td>{{site.address}}</td>
+            <td>{{site.state}}</td>
+            <td>{{site.region}}</td>
+            <td>{{site.contact}}</td>
+            <td>{{site.designation}}</td>
+            <td>{{site.email}}</td>
+            <td>{{site.phone}}</td>
+            <td>{{site.date_added}}</td>
+            <td><a class="btn btn-primary btn-sm" href="{% url 'audits:update-site' site.id %}">Update</a></>
+            <td><a class="btn btn-danger btn-sm" href="{% url 'audits:delete-site' site.id %}">Delete</a></td>
+
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+
+
+
+
+
+
+{% endblock %}

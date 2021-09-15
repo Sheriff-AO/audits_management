@@ -1,0 +1,60 @@
+{% extends 'base.html' %} 
+
+
+{% block title %}
+    Vendor Deatails
+{% endblock title %}
+    
+
+{% block content %}
+
+
+    <div class="card card-body">
+        <h2><strong>Vendor:</strong> {{ vendor.name }}</h2>
+        <p class="article-content"><strong>Representative:</strong> {{ vendor.representative }}</p>
+        <p class="article-content"><strong>Designation:</strong> {{ vendor.designation }}</p>
+        <p class="article-content"><strong>Contact Number:</strong> {{ vendor.contact }}</p>
+        <p class="article-content"><strong>Email:</strong> {{ vendor.email }}</p>
+        <p class="article-content"><strong>Number of sites:</strong> {{ vendor.sites.all.count }}</p>
+        
+    </div>
+    <div>
+        <table class="table table-striped table-hover table-sm">
+            <tr>
+                <th>Clients</th>
+                <th>Branch</th>
+                <th>Address</th>
+                <th>State</th>
+                <th>Region</th>
+                <th>Contact Person</th>
+                <th>Designation</th>
+                <th>Email</th>
+                <th>Contact Number</th>
+                <th>Date Assigned</th>
+            </tr>
+            
+            {% for site in sites %} 
+            
+                <tr>
+                    <td>{{site.client}}</td>  
+                    <td>{{site.name}}</td>
+                    <td>{{site.address}}</td>
+                    <td>{{site.state}}</td>
+                    <td>{{site.region}}</td>
+                    <td>{{site.contact}}</td>
+                    <td>{{site.designation}}</td> 
+                    <td>{{site.email}}</td>
+                    <td>{{ site.phone}}</td>
+                    
+                    {% for date in dates %}
+                    <td>{{ date }}</td> 
+                    {% endfor %}    
+                </tr>
+            
+            {% endfor %}
+        </table>
+
+            
+    </div>
+
+{% endblock %}
