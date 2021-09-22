@@ -49,7 +49,7 @@
             <td>{{site.designation}}</td>
             <td>{{site.email}}</td>
             <td>{{site.phone}}</td>
-            <td>{{site.date_added}}</td>
+            <td>{{site.date_added|date}}</td>
             <td><a class="btn btn-primary btn-sm" href="{% url 'audits:update-site' site.id %}">Update</a></>
             <td><a class="btn btn-danger btn-sm" href="{% url 'audits:delete-site' site.id %}">Delete</a></td>
 

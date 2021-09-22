@@ -5,14 +5,16 @@ Vendors
 {% endblock %} 
 
 {% block content %}
+
+{% if messages %}
+{% for message in messages %}
+  <div class="alert alert-success" role="alert">{{ message }}</div>
+{% endfor %}
+{% endif %}
 <a class="btn btn-secondary btn-sm text-center" href="{% url 'audits:create-vendor' %}">Create Vendor</a>
 <div class="content">
 
-  {% if messages %}
-    {% for message in messages %}
-      <div>{{ message }}</div>
-    {% endfor %}
-  {% endif %}
+ 
     
     {% for vendor in vendors %}
     <div class="card card-body">

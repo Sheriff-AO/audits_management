@@ -277,7 +277,7 @@ class ChecklistWizardView(SessionWizardView):
             page_six=page_6,
             page_seven=page_7,  
             )
-        
+        messages.success(self.request, 'You have successfully submitted the report')
         return redirect('audits:all-vendor')
         
 
@@ -311,7 +311,7 @@ class ChecklistTwoWizardView(SessionWizardView):
             page_one=page_1,
             page_two=page_2,  
             )
-        
+        messages.success(self.request, 'You have successfully submitted the report')
         return redirect('audits:all-vendor')
         
     def get(self, request, *args, **kwargs):
@@ -342,7 +342,7 @@ class ChecklistThreeWizardView(SessionWizardView):
             page_one=page_1,
             page_two=page_2,  
             )
-        
+        messages.success(self.request, 'You have successfully submitted the report')
         return redirect('audits:all-vendor')
         
     def get(self, request, *args, **kwargs):
