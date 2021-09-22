@@ -25,6 +25,9 @@ class Client(models.Model):
     def __str__(self):
         return f'{self.name}'
 
+    class Meta:
+        ordering = ('date_created',)
+
     
 class Site(models.Model):
     client = models.ForeignKey(Client, null=True, on_delete=models.CASCADE)
@@ -41,6 +44,9 @@ class Site(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+
+    class Meta:
+        ordering = ('date_added',)
 
 
 
@@ -80,17 +86,20 @@ class Schedule(models.Model):
     )
     vendor = models.ForeignKey(Vendor, null=True, on_delete=models.CASCADE)
     site = models.ForeignKey(Site, null=True, on_delete=models.CASCADE)
-    date_assigned = models.DateTimeField(default=timezone.now)
+    date_assigned = models.DateTimeField()
     status = models.CharField(max_length=100, null=True, choices=STATUS)
     report_received = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.vendor} - {self.site}"
 
+    class Meta:
+        ordering = ('date_assigned',)
+
 
 
 class PageOne(models.Model):
-    client = models.CharField(max_length=100, null=True, blank=True)
+    client = models.ForeignKey(Client, null=True, on_delete=models.CASCADE)
     site_full_address = models.CharField(max_length=120, null=True, blank=True)
     gps_coordinate = models.CharField(max_length=30, null=True, blank=True)
     contact_person = models.CharField(max_length=100, null=True, blank=True)
@@ -269,7 +278,7 @@ class ChecklistForBank(models.Model):
 
 
 class FillingStationPageOne(models.Model):
-    client = models.CharField(max_length=100, null=True, blank=True)
+    client = models.ForeignKey(Client, null=True, on_delete=models.CASCADE)
     site_full_address = models.CharField(max_length=120, null=True, blank=True)
     gps_coordinate = models.CharField(_("GPS Coordinates"), max_length=30, null=True, blank=True)
     contact_person = models.CharField(max_length=100, null=True, blank=True)
@@ -357,14 +366,14 @@ class ChecklistForFillingStation(models.Model):
 
    
 class CommercialIndustryPageOne(models.Model):
-    client = models.CharField(max_length=100, null=True, blank=True)
+    client = models.ForeignKey(Client, null=True, on_delete=models.CASCADE)
     site_full_address = models.CharField(max_length=120, null=True, blank=True)
     gps_coordinate = models.CharField(_("GPS Coordinates"), max_length=30, null=True, blank=True)
     contact_person = models.CharField(max_length=100, null=True, blank=True)
     contact_number = models.CharField(max_length=30, null=True, blank=True)
     date = models.DateTimeField()
     connects_to_grid = models.BooleanField(null=True, blank=True)
-    tariff = models.DecimalField(null=True, blank=True, max_digits=3, decimal_places=2, help_text='kWh')
+    tariff = models.DecimalField(null=True, blank=True, max_digits=8, decimal_places=4, help_text='per kWh')
     grid_quality = models.CharField(max_length=80, null=True, blank=True)
     grid_availability = models.IntegerField(null=True, blank=True, help_text='State in percentage on the average.')
     transformers_detail = models.CharField(max_length=200, null=True, blank=True, help_text='in kVA')

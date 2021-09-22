@@ -20,32 +20,22 @@ class ClientForm(forms.ModelForm):
         fields = ['user', 'category', 'name', 'rep_name', 'designation', 'phone', 'email', 'num_of_site', 'date_created']
         ordering = ['date_created']
         widgets = {'date_created': DateInput()}
-        
-        """
-        widgets = {
-            'user': forms.TextInput(attrs={'class': 'form-control'}),
-            'category': forms.TextInput(attrs={'class': 'form-control'}),
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'rep_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'designation': forms.TextInput(attrs={'class': 'form-control'}),
-            'phone': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.TextInput(attrs={'class': 'form-control'}),
-            'num_of_site': forms.TextInput(attrs={'class': 'form-control'}),    
-        }
-
-        """
+       
 
 
 class VendorForm(forms.ModelForm):
     class Meta:
         model = Vendor
         fields = '__all__'
+        widgets = {'date_created': DateInput()}
+       
 
 
 class ScheduleForm(forms.ModelForm):
     class Meta:
         model = Schedule
         fields = '__all__'
+        widgets = {'date_assigned': DateInput()}
 
 
 
@@ -94,28 +84,33 @@ class PageSevenForm(forms.ModelForm):
     class Meta:
         model = PageSeven
         fields = '__all__'
+        widgets = {'date_added': DateInput()}
 
 
 class FillingStationPageOneForm(forms.ModelForm):
     class Meta:
         model = FillingStationPageOne
         fields = '__all__'
+        widgets = {'date': DateInput()}
 
 
 class FillingStationPageTwoForm(forms.ModelForm):
     class Meta:
         model = FillingStationPageTwo
         fields = '__all__'
+        
 
 
 class CommercialIndustryPageOneForm(forms.ModelForm):
     class Meta:
         model = CommercialIndustryPageOne
         fields = '__all__'
+        widgets = {'date': DateInput()}
 
 
 class CommercialIndustryPageTwoForm(forms.ModelForm):
     class Meta:
         model = CommercialIndustryPageTwo
         fields = '__all__'
+       
 

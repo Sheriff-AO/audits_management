@@ -47,7 +47,7 @@
                     <td>{{ site.phone}}</td>
                     
                     {% for date in dates %}
-                    <td>{{ date }}</td> 
+                    <td>{{ date|date }}</td> 
                     {% endfor %}    
                 </tr>
             
