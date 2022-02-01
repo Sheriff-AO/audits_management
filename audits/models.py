@@ -31,7 +31,7 @@ class Client(models.Model):
     
 class Site(models.Model):
     client = models.ForeignKey(Client, null=True, on_delete=models.CASCADE)
-    name = models.CharField(max_length=50, null=True)
+    name = models.CharField(max_length=50, null=True, verbose_name="Branch Name")
     address = models.TextField(max_length=200, null=True)
     state = models.CharField(max_length=20, null=True)
     region = models.CharField(max_length=4, null=True)
@@ -76,7 +76,7 @@ class Vendor(models.Model):
 
 class Schedule(models.Model):
     STATUS = (
-        ('Scheduled for Audit', 'Scheduled for Audit'),
+        ('Pending Audit', 'Pending Audit'),
         ('Scheduled for Data-logging', 'Scheduled for Data-logging'),
         ('Scheduled for Audit & Data-logging', 'Scheduled for Audit & Data-logging'),
         ('Pending Schedule', 'Pending Schedule'),
@@ -98,42 +98,38 @@ class Schedule(models.Model):
 
 
 
-class PageOne(models.Model):
-    client = models.ForeignKey(Client, null=True, on_delete=models.CASCADE)
-    site_full_address = models.CharField(max_length=120, null=True, blank=True)
-    gps_coordinate = models.CharField(max_length=30, null=True, blank=True)
-    contact_person = models.CharField(max_length=100, null=True, blank=True)
-    contact_number = models.CharField(max_length=30, null=True, blank=True)
-    date = models.DateTimeField()
-    location = models.TextField(_("ACs by Location"), null=True, help_text='Please enter the number of ACs per location.')
-    split_1 = models.IntegerField(_("Number of 1HP"), null=True)
-    split_2 = models.IntegerField(_("Number of 1.5HP"), null=True)
-    split_3 = models.IntegerField(_("Number of 2HP"), null=True)
-    split_4 = models.IntegerField(_("Number of 2.5HP"), null=True)
-    standing_unit_1 = models.IntegerField(_("Number of 3HP"), null=True)
-    standing_unit_2 = models.IntegerField(_("Number of 5HP"), null=True)
-    standing_unit_3 = models.IntegerField(_("Number of 10HP"), null=True)
-    comment = models.TextField(_("Comment"), null=True)
-    rooftop = models.BooleanField(default=False, null=True)
-    ground_mounted = models.BooleanField(default=False, null=True)
-    rooftop_ground_mounted = models.BooleanField(default=False, null=True)
+class Checklist(models.Model):
+    client = models.CharField(max_length=200, blank=True, null=True)
+    branch = models.CharField(max_length=200, blank=True, null=True)
+    site_address = models.CharField(max_length=200, null=True, blank=True, verbose_name="Site Address")
+    site_code = models.PositiveIntegerField(null=True, blank=True)
+    latitude = models.DecimalField(max_digits=12, decimal_places=10, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=12, decimal_places=10, null=True, blank=True)
+    business_type = models.CharField(max_length=100, null=True, blank=True, verbose_name="Business Type")
+    contact_person_name = models.CharField(max_length=200, null=True, blank=True, verbose_name="Contact Person")
+    contact_personPhone = models.PositiveIntegerField(null=True, blank=True, verbose_name="Phone")
+    vendor = models.CharField(max_length=200, blank=True, null=True)
+    auditor_name = models.CharField(max_length=200, null=True, blank=True, verbose_name="Auditor's Name")
+    auditor_phone = models.PositiveIntegerField(null=True, blank=True, verbose_name="Phone")
+    auditDate = models.DateField(null=True, blank=True, verbose_name="Date of Audit")
+    #-------------------------------Air conditioners--------------------------------
+    location = models.TextField(_("ACs by Location"), null=True, help_text='Please enter the number of ACs per location.', blank=True)
+    split_1 = models.IntegerField(_("Number of 1HP"), null=True, blank=True)
+    split_2 = models.IntegerField(_("Number of 1.5HP"), null=True, blank=True)
+    split_3 = models.IntegerField(_("Number of 2HP"), null=True, blank=True)
+    split_4 = models.IntegerField(_("Number of 2.5HP"), null=True, blank=True)
+    standing_unit_1 = models.IntegerField(_("Number of 3HP"), null=True, blank=True)
+    standing_unit_2 = models.IntegerField(_("Number of 5HP"), null=True, blank=True)
+    standing_unit_3 = models.IntegerField(_("Number of 10HP"), null=True, blank=True)
+    comment = models.TextField(_("Comment"), null=True, blank=True)
+    #------------------------------Lightings-----------------------------------------
     florescent = models.CharField(max_length=50, null=True, blank=True)
-    LED = models.CharField(max_length=50, null=True, blank=True)
+    led = models.CharField(max_length=50, null=True, blank=True)
     halogen = models.CharField(max_length=50, null=True, blank=True)
-    energy_saver = models.CharField(max_length=50, null=True, blank=True)
-    panel_light = models.CharField(max_length=50, null=True, blank=True)
-    others = models.CharField(max_length=50, null=True, blank=True, help_text='Please state the power rating in Watts.')
-
-
-    class Meta:
-        verbose_name = 'PageOne'
-        verbose_name_plural = 'PageOnes'
-
-
-
-
-
-class PageTwo(models.Model):
+    energy_saver = models.CharField(max_length=50, null=True, blank=True, verbose_name="Energy Saver Bulb")
+    panel_light = models.CharField(max_length=50, null=True, blank=True, verbose_name="Panel Light")
+    other_lights = models.CharField(max_length=50, null=True, blank=True, help_text='Please state the power rating in Watts.', verbose_name="Other Light Bulbs")
+    #------------------------------Appliance----------------------------------------
     desktop = models.IntegerField(null=True, blank=True)
     laptop = models.IntegerField(null=True, blank=True)
     printer = models.IntegerField(null=True, blank=True)
@@ -147,27 +143,39 @@ class PageTwo(models.Model):
     water_pump = models.IntegerField(null=True, blank=True)
     fan = models.IntegerField(null=True, blank=True)
     microwave = models.IntegerField(null=True, blank=True)
-    card_printer = models.IntegerField(null=True, blank=True)
-    time_stamping_machine = models.IntegerField(null=True, blank=True)
+    card_printer = models.IntegerField(null=True, blank=True, verbose_name="Card Printer")
+    time_stamping_machine = models.IntegerField(null=True, blank=True, verbose_name="Timestamping Machine")
     shredder = models.IntegerField(null=True, blank=True)
-    sorting_machine = models.IntegerField(null=True, blank=True)
+    sorting_machine = models.IntegerField(null=True, blank=True, verbose_name="Sorting Machine")
     fridge = models.IntegerField(null=True, blank=True)
-    mantrap_door = models.IntegerField(null=True, blank=True)
-    hand_dryer = models.IntegerField(null=True, blank=True)
-    others = models.TextField(null=True, blank=True, help_text='Please enter the name and counts of other appliances if exist.')
-
-
-class PageThree(models.Model):
-    connects_to_grid = models.BooleanField(null=True)
-    connects_to_solar = models.BooleanField(null=True)
-    details = models.CharField(max_length=200, help_text='Enter the number and size of the solar panels.')
-    connects_to_generator = models.BooleanField(null=True)
-    size_of_transformer = models.IntegerField(null=True, help_text='in kVA')
-    genset_1 = models.CharField(max_length=60, null=True, blank=True)
+    mantrap_door = models.IntegerField(null=True, blank=True, verbose_name="Mantrap Door")
+    hand_dryer = models.IntegerField(null=True, blank=True, verbose_name="Hand Dryer")
+    other_appliances = models.TextField(null=True, blank=True, help_text='Please enter the name and counts of other appliances if exist.', verbose_name="Other Appliances")
+   
+    #------------------------------------Sources of Power ------------------------------------------------
+    connects_to_grid = models.BooleanField(default=False, null=True, blank=True, verbose_name="Is the conneted to the Grid?")
+    connects_to_generator = models.BooleanField(default=False, null=True, blank=True, verbose_name="Connects to Generator?")
+    connects_to_solar = models.BooleanField(default=False, null=True, blank=True, verbose_name="Connects to Solar?")
+    details = models.TextField(null=True, blank=True)
+    grid_avg_cost = models.CharField(max_length=60, null=True, blank=True, verbose_name="Monthly Average Cost on Grid")
+    diesel_avg_cost = models.CharField(max_length=60, null=True, blank=True, verbose_name="Monthly Average Cost on Diesel")
+    gensets_maintenance_avg_cost = models.CharField(max_length=60, null=True, blank=True, verbose_name="Average Cost on Generator Maintenance")
+    ac_maintenance_avg_cost = models.CharField(max_length=60, null=True, blank=True, verbose_name="Average Cost on Air Conditioners Maintenance")
+    other_cost = models.CharField(max_length=60, null=True, blank=True, verbose_name="Other Associated Cost")
+    genset_1 = models.CharField(max_length=60, null=True, blank=True,help_text='In kVA')
     genset_2 = models.CharField(max_length=60, null=True, blank=True)
     genset_3 = models.CharField(max_length=60, null=True, blank=True)
-    transformer = models.CharField(max_length=60, null=True, blank=True)
-    item1 = models.CharField(max_length=100, null=True, blank=True, help_text='State the equipment/appliance name and the rating in kW or kVA in each case. ')
+    genset_4 = models.CharField(max_length=60, null=True, blank=True)
+    transformer_1 = models.CharField(max_length=60, null=True, blank=True,help_text='In kVA')
+    transformer_2 = models.CharField(max_length=60, null=True, blank=True)
+    noOfAtm = models.PositiveIntegerField(null=True, blank=True, verbose_name="Number of ATMs")
+    otherAtmDetails = models.TextField(null=True, blank=True, verbose_name="Other Details")
+    opening_time = models.TimeField(null=True, blank=True)
+    closing_time = models.TimeField(null=True, blank=True)
+    Monday_to_Friday = models.BooleanField(default=False, null=True, blank=True)
+    Monday_to_Saturday = models.BooleanField(default=False, null=True, blank=True)
+    Monday_to_Sunday = models.BooleanField(default=False, null=True, blank=True)
+    item1 = models.CharField(max_length=100, null=True, blank=True, help_text='State the equipment/appliance name and the rating in kVA in each case. ')
     item2 = models.CharField(max_length=100, null=True, blank=True)
     item3 = models.CharField(max_length=100, null=True, blank=True)
     item4 = models.CharField(max_length=100, null=True, blank=True)
@@ -177,244 +185,284 @@ class PageThree(models.Model):
     inverter_1 = models.CharField(max_length=100, null=True, blank=True)
     inverter_2 = models.CharField(max_length=100, null=True, blank=True)
     inverter_3 = models.CharField(max_length=100, null=True, blank=True)
-    ups_1 = models.CharField(max_length=100, null=True, blank=True)
+    ups_1 = models.CharField(max_length=100, null=True, blank=True,help_text='In kVA')
     ups_2 = models.CharField(max_length=100, null=True, blank=True)
     ups_3 = models.CharField(max_length=100, null=True, blank=True)
-    stabilizer_1 = models.CharField(max_length=100, null=True, blank=True)
+    stabilizer_1 = models.CharField(max_length=100, null=True, blank=True,help_text='In kVA')
     stabilizer_2 = models.CharField(max_length=100, null=True, blank=True)
-    battery_bank_1 = models.CharField(max_length=100, null=True, blank=True, help_text='e.g 24 units of 12V 200AH')
-    battery_bank_2 = models.CharField(max_length=100, null=True, blank=True)
-    battery_bank_3 = models.CharField(max_length=100, null=True, blank=True)
-    battery_bank_4 = models.CharField(max_length=100, null=True, blank=True)
+    battery_bank_1 = models.CharField(max_length=100, null=True, blank=True, help_text='e.g 24 units of 12V 200AH', verbose_name="Battery Bank 1")
+    battery_bank_2 = models.CharField(max_length=100, null=True, blank=True, verbose_name="Battery Bank 2")
+    battery_bank_3 = models.CharField(max_length=100, null=True, blank=True, verbose_name="Battery Bank 3")
+    battery_bank_4 = models.CharField(max_length=100, null=True, blank=True, verbose_name="Battery Bank 4")
+    # --------------------------------------Building-----------------------------------------------------
+    bungalow = models.BooleanField(default=False, null=True, blank=True)
+    one_storey = models.BooleanField(default=False, null=True, blank=True, verbose_name="One Storey")
+    two_storey = models.BooleanField(default=False, null=True, blank=True, verbose_name="Two Storey")
+    three_storey = models.BooleanField(default=False, null=True, blank=True, verbose_name="Three Storey")
+    multi_resident = models.BooleanField(default=False, null=True, blank=True, verbose_name="Multi-Resident")
+    multi_commercial = models.BooleanField(default=False, null=True, blank=True, verbose_name="Multi-Commercial")
+    mall = models.BooleanField(default=False, null=True, blank=True)
+    ownership = models.CharField(max_length=100, null=True, blank=True) 
+    picture = models.ImageField(default="default1.jpg", upload_to="building_pics", null=True, blank=True)
+    roof_type = models.CharField(max_length=100, null=True, blank=True, verbose_name="Roof Type")
+    roof_picture = models.ImageField(default='default2.jpg', upload_to='roof_pics', null=True, blank=True, verbose_name="Roof Picture")
+    roof_length = models.DecimalField(max_digits=8, decimal_places=4, null=True, verbose_name="Roof Length")
+    roof_width =  models.DecimalField(max_digits=8, decimal_places=4, null=True, verbose_name="Roof Width")
+    total_area =  models.DecimalField(max_digits=8, decimal_places=4, null=True, verbose_name="Total Area")
+    number_of_panels = models.PositiveIntegerField(null=True, blank=True, verbose_name="Number of Panels")
+    roofing_sheet_material = models.CharField(max_length=100, null=True, blank=True, verbose_name="Roofing Sheet Material")  
+    roofing_truss_material = models.CharField(max_length=100, null=True, blank=True, verbose_name="Roofing Truss Material")
+    roofing_sheet_thickness = models.CharField(max_length=100, null=True, blank=True, verbose_name="Roofing Sheet Thickness (mm)")  
+    roofing_truss_spacing =  models.DecimalField(max_digits=8, decimal_places=4, null=True, verbose_name="Roofing Truss Spacing") 
+    repair_needed = models.BooleanField(default=False, null=True, blank=True, verbose_name="Does the roof requires repairs?")
+    minor_repair = models.BooleanField(default=False, null=True, blank=True, verbose_name="Minor Repair")
+    major_repair = models.BooleanField(default=False, null=True, blank=True, verbose_name="Major Repair")
+    complete_replacement = models.BooleanField(default=False, null=True, blank=True, verbose_name="Complete Replacement")
+    changeover_box_picture = models.ImageField(default='default3.jpg',  upload_to='changeover_pics', null=True, blank=True, verbose_name="Attach picture of the Changeover Box")
+    Distribution_board_picture = models.ImageField(default='default4.jpg', upload_to='db_pics', null=True, blank=True, verbose_name="Attach picture of the DB")
+    general_comment = models.TextField(null=True, blank=True, verbose_name="Comments")
 
-
-
-
-
-
-class PageFour(models.Model):
-    opening_time = models.TimeField(null=True, blank=True, help_text='State in 24-hours format')
-    closing_time = models.TimeField(null=True, blank=True, help_text='State in 24-hours format')
-    monday_to_friday = models.BooleanField(default=False)
-    monday_to_saturday = models.BooleanField(default=False)
-    monday_to_sunday = models.BooleanField(default=False)
-    available = models.BooleanField(default=False, help_text='Only tick if equipment room is available.')
-    not_available = models.BooleanField(default=False, help_text='Only tick if equipment room is NOT available.')
-    on_what_floor = models.CharField(max_length=20, null=True, blank=True)
-    dimension = models.CharField(max_length=30, null=True, blank=True)
-    distance_to_generator = models.CharField(max_length=10, null=True, blank=True)
+    # ------------------------------------------------Equipment Room ---------------------------------------------
+    er_available = models.BooleanField(default=False, null=True, blank=True, verbose_name="Is Equipment Room Available?")
+    space_toBuild = models.CharField(max_length=100, null=True, blank=True, verbose_name="If not, is there space to build one? ")
+    on_what_floor = models.CharField(max_length=20, null=True, blank=True, verbose_name="On what floor is the ER or the available space")
+    dimension = models.CharField(max_length=30, null=True, blank=True, verbose_name="What is the dimension of the room or space?")
+    ER_picture_or_space_to_build = models.ImageField(default='default5.jpg',  upload_to='er_pics', null=True, blank=True, verbose_name="Please attach the picture")
+    distance_to_generator = models.CharField(max_length=80, null=True, blank=True, verbose_name="State the distance from the ER to the generator")
+    distance_to_powerRoom = models.CharField(max_length=80, null=True, blank=True, verbose_name="State the distance from the  ER to the existing Power Room")
+    distance_to_roof = models.CharField(max_length=80, null=True, blank=True, verbose_name="State the distance from the  ER to the roof")
+    # -----------------------------------Safety-----------------------------------------------------------
+    one = models.CharField( _("Will ladder or scaffolds be required for access to the roof?"),max_length=150, null=True)
+    two  = models.CharField(_("Will fall protection be required while working on the roof?"), max_length=150, null=True)
+    three  = models.CharField( _("Is there enough access and egress at proposed equipment room?"),max_length=150, null=True)
+    four  = models.CharField( _("Does the proposed equipment room has an existing smoke/fire alarm?"), max_length=150, null=True)
+    five  = models.CharField( _("Is there enough access and egress at the generator area. If we are dealing with a confined space please state?"), max_length=150, null=True)
+    six  = models.CharField( _("Are there existing bund walls/secondary spill contigency arrangement around the diesel storage tank?"), max_length=150, null=True)
+    seven  = models.CharField( _("Are there visible signs of oil spillage around the generator area/plinth? Please take date-staped pictures"), max_length=150, null=True)
+    eight = models.ImageField(default='default6.jpg', upload_to='safety', null=True, blank=True, verbose_name="Attach the picture")
+    nine  = models.CharField(
+        _("Are there any overhead power cables that will be a problem for work at height?"), max_length=150, null=True)
+    ten  = models.CharField( _("Are there any environmental or safety concerns?"), max_length=150, null=True)  
     
-    ER_picture_or_space_to_build = models.ImageField(default='default5.jpg',  upload_to='er_pics')
-    bungalow = models.BooleanField(default=False, help_text='State the building type and other information as below.')
-    one_storey = models.BooleanField(default=False)
-    two_storey = models.BooleanField(default=False)
-    three_storey = models.BooleanField(default=False)
-    multi_resident = models.BooleanField(default=False)
-    multi_commercial = models.BooleanField(default=False)
-    mall = models.BooleanField(default=False)
-    building_picture = models.ImageField(
-        default='default1.jpg',  upload_to='building_pics')
-    roof_picture = models.ImageField(
-        default='default2.jpg', upload_to='roof_pics')
-    changeover_box_picture = models.ImageField(
-        default='default3.jpg',  upload_to='changeover_pics')
-    Distribution_board_picture = models.ImageField(
-        default='default4.jpg', upload_to='db_pics')
-   
-
-
-class PageFive(models.Model):
-    one = models.BooleanField( _("Will ladder or scaffolds be required for access to the roof?"), default=False, null=True)
-    two = models.BooleanField( _("Will fall protection be required while working on the roof?"), default=False, null=True)
-    three = models.BooleanField( _("Is there enough access and egress at proposed equipment room?"), default=False, null=True)
-    four = models.BooleanField( _("Does the proposed equipment room has an existing smoke/fire alarm?"), default=False, null=True)
-    five = models.BooleanField( _("Is there enough access and egress at the generator area. If we are dealing with a confined space please state?"), default=False, null=True)
-    six = models.BooleanField( _("Are there existing bund walls/secondary spill contigency arrangement around the diesel storage tank?"), default=False, null=True)
-    seven = models.BooleanField( _("Are there visible signs of oil spillage around the generator area/plinth? Please take date-staped pictures"), default=False, null=True)
-    eight = models.BooleanField(
-        _("Are there any overhead power cables that will be a problem for work at height?"), default=False, null=True)
-    nine = models.BooleanField( _("Are there any environmental or safety concerns?"), default=False, null=True)   
-
+    #-------------------------------------------Sign Off ------------------------------------------
+    client_rep = models.CharField(max_length=150, null=True, blank=True, verbose_name="Customer Representative's Name")
+    position = models.CharField(max_length=80, null=True, blank=True)
+    client_repPhone = models.PositiveIntegerField(null=True, blank=True, verbose_name="Contact Number")
+    email = models.CharField(max_length=100, null=True, blank=True)
+    GeneralComment = models.TextField(null=True, blank=True, verbose_name="General Comments")
+    created_at = models.DateTimeField(auto_now_add=True)
     
-
-class PageSix(models.Model):
-    roof_dimension = models.CharField(max_length=20, null=True, blank=True)
-    total_area = models.IntegerField()
-    number_of_panels = models.IntegerField()
-    roof_type = models.CharField(max_length=50, null=True, blank=True)
-    roofing_sheet_material = models.CharField(max_length=20, null=True, blank=True)
-    roofing_sheet_thickness = models.CharField(max_length=20, null=True, blank=True)
-    roofing_sheet_lapping = models.CharField(max_length=20, null=True, blank=True)
-    roofing_truss = models.CharField(max_length=20, null=True, blank=True)
-    not_needed = models.BooleanField(default=False, help_text='Roof Remedial work?')
-    minor_repair = models.BooleanField(default=False)
-    major_repair = models.BooleanField(default=False)
-    complete_replacement = models.BooleanField(default=False)
-    general_comment = models.TextField(null=True, blank=True)
-
-
-class PageSeven(models.Model):    
-    name = models.CharField(max_length=50, null=True, blank=True)
-    position = models.CharField(max_length=30, null=True, blank=True)
-    phone = models.CharField(max_length=30, null=True, blank=True)
-    email = models.CharField(max_length=50, null=True, blank=True)
-    name = models.CharField(max_length=50, null=True, blank=True)
-    position = models.CharField(max_length=30, null=True, blank=True)
-    phone = models.CharField(max_length=30, null=True, blank=True)
-    email = models.CharField(max_length=50, null=True, blank=True)
-    comment = models.TextField(null=True, blank=True)
+    class Meta:
+        verbose_name_plural = "Checklist For Banks"
+    
+    def __str__(self):
+        if (self.vendor or self.client or self.branch) != None: 
+            return f"{self.vendor} | {self.client} | {self.branch}"
+        else:
+            return "vendor or client or branch field was not filled."
+        
 
 
 
 
-class ChecklistForBank(models.Model):
-    page_one = models.OneToOneField("audits.PageOne", verbose_name=_("Customer Information | Cooling | Roof and Lightings"), on_delete=models.CASCADE)
-    page_two = models.OneToOneField("audits.PageTwo", verbose_name=_("Appliances"), on_delete=models.CASCADE)
-    page_three = models.OneToOneField("audits.PageThree", verbose_name=_("Existing Power Information"), on_delete=models.CASCADE)
-    page_four = models.OneToOneField("audits.PageFour", verbose_name=_("Operation Hours | Building | ER Information"), on_delete=models.CASCADE)
-    page_five = models.OneToOneField("audits.PageFive", verbose_name=_("Safety"), on_delete=models.CASCADE)
-    page_six = models.OneToOneField("audits.PageSix", verbose_name=_("Roof Information"), on_delete=models.CASCADE)
-    page_seven = models.OneToOneField("audits.PageSeven", verbose_name=_("Signoff | General Comments"), on_delete=models.CASCADE)
+class Checklist2(models.Model):
+    # -------------------------------------Customer Details --------------------------------------------------------
+    client = models.CharField(max_length=200, blank=True, null=True)
+    branch = models.CharField(max_length=200, blank=True, null=True)
+    site_address = models.CharField(max_length=200, null=True, blank=True, verbose_name="Site Address")
+    site_code = models.PositiveIntegerField(null=True, blank=True)
+    latitude = models.DecimalField(max_digits=12, decimal_places=10, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=12, decimal_places=10, null=True, blank=True)
+    business_type = models.CharField(max_length=100, null=True, blank=True, verbose_name="Business Type")
+    contact_person_name = models.CharField(max_length=200, null=True, blank=True, verbose_name="Contact Person")
+    contact_personPhone = models.PositiveIntegerField(null=True, blank=True, verbose_name="Phone")
+    vendor = models.CharField(max_length=200, blank=True, null=True)
+    auditor_name = models.CharField(max_length=200, null=True, blank=True, verbose_name="Auditor's Name")
+    auditor_phone = models.PositiveIntegerField(null=True, blank=True, verbose_name="Phone")
+    auditDate = models.DateField(null=True, blank=True, verbose_name="Date of Audit")
+    # ----------------------------- Pumps and Air Conditioners----------------------------------------------------------
+    pms_pump = models.CharField(max_length=100, null=True, blank=True, verbose_name="Number and Size(in HP) of PMS Pumps")   
+    ago_pump = models.CharField(max_length=100, null=True, blank=True, verbose_name="Number and Size(in HP) of AGO Pumps")   
+    dpk_pump = models.CharField(max_length=100, null=True, blank=True, verbose_name="Number and Size(in HP) of DPK Pumps")  
+    surface_transfer_pump = models.CharField(max_length=100, null=True, blank=True, verbose_name="Size (in HP) of the surface pumps")   
+    water_pump = models.CharField(max_length=100, null=True, blank=True, verbose_name="Water Pumps")   
+    location = models.TextField(_("ACs by Location"), null=True, blank=True, help_text='Please enter the number of ACs by location, stating the codition as: working or not working.')
+    split_1 = models.IntegerField(_("Number of 1HP"), null=True, blank=True) 
+    split_2 = models.IntegerField(_("Number of 1.5HP"), null=True, blank=True)
+    split_3 = models.IntegerField(_("Number of 2HP"), null=True, blank=True)
+    split_4 = models.IntegerField(_("Number of 2.5HP"), null=True, blank=True)
+    standing_unit_1 = models.IntegerField(_("Number of 3HP"), null=True, blank=True)
+    standing_unit_2 = models.IntegerField(_("Number of 5HP"), null=True, blank=True)
+    standing_unit_3 = models.IntegerField(_("Number of 10HP"), null=True, blank=True)
 
-
-class FillingStationPageOne(models.Model):
-    client = models.ForeignKey(Client, null=True, on_delete=models.CASCADE)
-    site_full_address = models.CharField(max_length=120, null=True, blank=True)
-    gps_coordinate = models.CharField(_("GPS Coordinates"), max_length=30, null=True, blank=True)
-    contact_person = models.CharField(max_length=100, null=True, blank=True)
-    contact_number = models.CharField(max_length=30, null=True, blank=True)
-    date = models.DateTimeField()
-    PMS_pump = models.IntegerField(null=True, blank=True)   
-    AGO_pump = models.IntegerField(null=True, blank=True)   
-    DPK_pump = models.IntegerField(null=True, blank=True)  
-    surface_transfer_pump = models.IntegerField(null=True, blank=True, help_text='1.5HP')   
-    water_pump = models.IntegerField(null=True, blank=True)   
-    location = models.TextField(_("ACs by Location"), null=True, help_text='Please enter the number of ACs by location, stating the codition as: working or not working.')
-    split_1 = models.IntegerField(_("Number of 1HP"), null=True) 
-    split_2 = models.IntegerField(_("Number of 1.5HP"), null=True)
-    split_3 = models.IntegerField(_("Number of 2HP"), null=True)
-    split_4 = models.IntegerField(_("Number of 2.5HP"), null=True)
-    standing_unit_1 = models.IntegerField(_("Number of 3HP"), null=True)
-    standing_unit_2 = models.IntegerField(_("Number of 5HP"), null=True)
-    standing_unit_3 = models.IntegerField(_("Number of 10HP"), null=True)
-    lighting_details = models.CharField(max_length=200, null=True, blank=True, help_text='Please state the type and wattage rating of all bulbs.')
-    canopy_light = models.IntegerField(null=True, blank=True)
-    perimeter_light = models.IntegerField(null=True, blank=True)
-    offices = models.IntegerField(null=True, blank=True)
-    rest_rooms = models.IntegerField(null=True, blank=True)
-    others_1 = models.IntegerField(null=True, blank=True)
-    others_2 = models.IntegerField(null=True, blank=True)
-    generator_1 = models.IntegerField(null=True, blank=True)
-    generator_2 = models.IntegerField(null=True, blank=True)
-    connects_to_grid = models.BooleanField(null=True)
-    transformer_size = models.IntegerField(null=True, blank=True, help_text='in kVA')
+    #page 2
+    #-------------------------------------------Lightings-----------------------------------------------------------------------
+    florescent = models.CharField(max_length=50, null=True, blank=True)
+    led = models.CharField(max_length=50, null=True, blank=True)
+    halogen = models.CharField(max_length=50, null=True, blank=True)
+    energy_saver = models.CharField(max_length=50, null=True, blank=True, verbose_name="Energy Saver Bulb")
+    panel_light = models.CharField(max_length=50, null=True, blank=True, verbose_name="Panel Light")
+    other_lights = models.CharField(max_length=50, null=True, blank=True, help_text='Please state the power rating in Watts.', verbose_name="Other Light Bulbs")
+    #------------------------------Generators-----------------------------------------------------------------------------------
+    generator_1 = models.CharField(max_length=50, null=True, blank=True, help_text="in kVA")
+    generator_2 = models.CharField(max_length=50, null=True, blank=True)
+    connects_to_grid = models.CharField(max_length=50, null=True, blank=True)
+    transformer_size = models.CharField(max_length=50, null=True, blank=True, help_text="in kVA") 
+    # ---------------------------------------Electrical Appliances---------------------------------------------------------
     fridge = models.IntegerField(null=True, blank=True)
     freezer = models.IntegerField(null=True, blank=True)
     fan = models.IntegerField(null=True, blank=True)
     printer = models.IntegerField(null=True, blank=True)
     scanner = models.IntegerField(null=True, blank=True)
-
-
-
-class FillingStationPageTwo(models.Model):
-    note_counting_machine = models.IntegerField(null=True, blank=True)
-    others_equipment_1 = models.IntegerField(null=True, blank=True)
-    others_equipment_2 = models.IntegerField(null=True, blank=True)
-    others_equipment_3 = models.IntegerField(null=True, blank=True)
-    others_equipment_4 = models.IntegerField(null=True, blank=True)
-    three_phase_equipment = models.BooleanField(help_text='State the size of te three pahse equipment (in HP) below')
-    size = models.IntegerField(null=True, blank=True)
-    roof_type = models.CharField(max_length=200, null=True, blank=True, help_text='Flat, Mono-Pitch, Double-Pitch, Specify if others')
-    roof_material = models.CharField(max_length=30, null=True, blank=True, help_text='Concrete slab, Aluminum, Ardex, Specify if others')
-    roofing_sheet_thickness = models.IntegerField(null=True, help_text='if Aluminum')
-    roofing_sheet_lapping = models.CharField(max_length=40, null=True, blank=True)
-    roofing_truss_material = models.CharField(max_length=40, null=True, blank=True)  
-    ER_picture_or_space_to_build = models.ImageField(default='default5.jpg',  upload_to='er_pics')
-    bungalow = models.BooleanField(default=False, help_text='State the building type and other information as below.')
-    one_storey = models.BooleanField(default=False)
-    two_storey = models.BooleanField(default=False)
-    three_storey = models.BooleanField(default=False)
-    multi_resident = models.BooleanField(default=False)
-    multi_commercial = models.BooleanField(default=False)
-    mall = models.BooleanField(default=False)
-    building_picture = models.ImageField(
-        default='default1.jpg',  upload_to='building_pics')
-    roof_picture = models.ImageField(
-        default='default2.jpg', upload_to='roof_pics')
-    changeover_box_picture = models.ImageField(
-        default='default3.jpg',  upload_to='changeover_pics')
-    Distribution_board_picture = models.ImageField(
-        default='default4.jpg', upload_to='db_pics')
+    note_counting_machine = models.IntegerField(null=True, blank=True, verbose_name="Note Counting Machine")
+    others_equipment = models.TextField(verbose_name="Other Equipment")
+    
+    three_phase_equipment = models.BooleanField( verbose_name="I there any 3- Phase Equipment?")
+    size = models.CharField(max_length=100, null=True, blank=True,help_text='State the size of te three pahse equipment (in HP)')
+    # ---------------------------------------Building----------------------------------------------------------------
+    #page 3
+    roof_type = models.CharField(max_length=200, null=True, blank=True, help_text='Flat, Mono-Pitch, Double-Pitch, Specify if others', verbose_name="Roof Type")
+    roof_material = models.CharField(max_length=30, null=True, blank=True, help_text='Concrete slab, Aluminum, Ardex, Specify if others', verbose_name="Roof Material")
+    roofing_sheet_material = models.CharField(max_length=100, null=True, blank=True, verbose_name="Roofing Sheet Material")  
+    roofing_truss_material = models.CharField(max_length=100, null=True, blank=True, verbose_name="Roofing Truss Material") 
+    roofing_sheet_thickness = models.CharField(max_length=100, null=True, blank=True, verbose_name="Roofing Sheet Thickness (mm)") 
+    roofing_truss_spacing =  models.DecimalField(max_digits=8, decimal_places=4, null=True, verbose_name="Roofing Truss Spacing")   
+    ER_picture_or_space_to_build = models.ImageField(default='default1.jpg',  upload_to='er_pics', null=True, blank=True, verbose_name="Please attach the picture")
+    building_type = models.CharField(max_length=100, default=False, help_text='State the building type and other information as below.', verbose_name="Building Type")
+    building_picture = models.ImageField(default='default2.jpg',  upload_to='building_pics', verbose_name="Attach picture of the building")
+    roof_picture = models.ImageField(default='default3.jpg', upload_to='roof_pics', null=True, blank=True, verbose_name="Roof Picture")
+    changeover_box_picture = models.ImageField(default='default4.jpg',  upload_to='changeover_pics', null=True, blank=True, verbose_name="Attach picture of the Changeover Box")
+    Distribution_board_picture = models.ImageField(default='default5.jpg', upload_to='db_pics', null=True, blank=True, verbose_name="Attach picture of the DB")
     opening_time = models.TimeField(null=True, blank=True, help_text='State in 24-hours format')
     closing_time = models.TimeField(null=True, blank=True, help_text='State in 24-hours format')
-    starsight_rep = models.CharField(_('Starsight Representative'),max_length=50, null=True, blank=True)
-    starsight_contact_number = models.CharField(max_length=30, null=True, blank=True)
-    station_rep = models.CharField(_("Station Representative"),max_length=30, null=True, blank=True)
-    client_contact_number = models.CharField(max_length=30, null=True, blank=True)
-    comment = models.TextField(_("General Comments"), null=True, blank=True) 
-
-
-
+    # -----------------------------------Safety-----------------------------------------------------------
+    one = models.CharField( _("Will ladder or scaffolds be required for access to the roof?"),max_length=150, null=True)
+    two  = models.CharField(_("Will fall protection be required while working on the roof?"), max_length=150, null=True)
+    three  = models.CharField( _("Is there enough access and egress at proposed equipment room?"),max_length=150, null=True)
+    four  = models.CharField( _("Does the proposed equipment room has an existing smoke/fire alarm?"), max_length=150, null=True)
+    five  = models.CharField( _("Is there enough access and egress at the generator area. If we are dealing with a confined space please state?"), max_length=150, null=True)
+    six  = models.CharField( _("Are there existing bund walls/secondary spill contigency arrangement around the diesel storage tank?"), max_length=150, null=True)
+    seven  = models.CharField( _("Are there visible signs of oil spillage around the generator area/plinth? Please take date-staped pictures"), max_length=150, null=True)
+    eight = models.ImageField(default='default6.jpg', upload_to='safety', null=True, blank=True, verbose_name="Attach the picture")
+    nine  = models.CharField(
+        _("Are there any overhead power cables that will be a problem for work at height?"), max_length=150, null=True)
+    ten  = models.CharField( _("Are there any environmental or safety concerns?"), max_length=150, null=True)  
     
-class ChecklistForFillingStation(models.Model):
-    page_one = models.OneToOneField("audits.FillingStationPageOne", 
-    verbose_name=_("Pumps | Cooling and Lighting Information"), on_delete=models.CASCADE)
-    page_two = models.OneToOneField("audits.FillingStationPageTwo", 
-    verbose_name=_("Appliances | Roof Detail and Operation Hour Information"), on_delete=models.CASCADE)
+    #-------------------------------------------Sign Off ------------------------------------------
+    client_rep = models.CharField(max_length=150, null=True, blank=True, verbose_name="Customer Representative's Name")
+    position = models.CharField(max_length=80, null=True, blank=True)
+    client_repPhone = models.PositiveIntegerField(null=True, blank=True, verbose_name="Contact Number")
+    email = models.CharField(max_length=100, null=True, blank=True)
+    GeneralComment = models.TextField(null=True, blank=True, verbose_name="General Comments")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = "Checklist For Gas and Fuel Stations"
+    
+    def __str__(self):
+        if (self.vendor or self.client or self.branch) != None: 
+            return f"{self.vendor} | {self.client} | {self.branch}"
+        else:
+            return "vendor or client or branch field was not filled."
    
 
 
    
-class CommercialIndustryPageOne(models.Model):
-    client = models.ForeignKey(Client, null=True, on_delete=models.CASCADE)
-    site_full_address = models.CharField(max_length=120, null=True, blank=True)
-    gps_coordinate = models.CharField(_("GPS Coordinates"), max_length=30, null=True, blank=True)
-    contact_person = models.CharField(max_length=100, null=True, blank=True)
-    contact_number = models.CharField(max_length=30, null=True, blank=True)
-    date = models.DateTimeField()
-    connects_to_grid = models.BooleanField(null=True, blank=True)
-    tariff = models.DecimalField(null=True, blank=True, max_digits=8, decimal_places=4, help_text='per kWh')
-    grid_quality = models.CharField(max_length=80, null=True, blank=True)
-    grid_availability = models.IntegerField(null=True, blank=True, help_text='State in percentage on the average.')
-    transformers_detail = models.CharField(max_length=200, null=True, blank=True, help_text='in kVA')
-    generators_detail = models.CharField(max_length=200, null=True, blank=True, help_text='in kVA')
-    switching_mode = models.CharField(max_length=30, null=True, blank=True)
-    minimum_load = models.IntegerField(null=True, blank=True, help_text='kW') 
-    average_load = models.IntegerField(null=True, blank=True, help_text='kW') 
-    maximum_load = models.IntegerField(null=True, blank=True, help_text='kW') 
-    daily_consumption = models.IntegerField(null=True, blank=True, help_text='kWh') 
+class Checklist3(models.Model):
+    # -------------------------------------Customer Details --------------------------------------------------------
+    client = models.CharField(max_length=200, blank=True, null=True)
+    branch = models.CharField(max_length=200, blank=True, null=True)
+    site_address = models.CharField(max_length=200, null=True, blank=True, verbose_name="Site Address")
+    site_code = models.PositiveIntegerField(null=True, blank=True)
+    latitude = models.DecimalField(max_digits=12, decimal_places=10, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=12, decimal_places=10, null=True, blank=True)
+    business_type = models.CharField(max_length=100, null=True, blank=True, verbose_name="Business Type")
+    contact_person_name = models.CharField(max_length=200, null=True, blank=True, verbose_name="Contact Person")
+    contact_personPhone = models.PositiveIntegerField(null=True, blank=True, verbose_name="Phone")
+    vendor = models.CharField(max_length=200, blank=True, null=True)
+    auditor_name = models.CharField(max_length=200, null=True, blank=True, verbose_name="Auditor's Name")
+    auditor_phone = models.PositiveIntegerField(null=True, blank=True, verbose_name="Phone")
+    auditDate = models.DateField(null=True, blank=True, verbose_name="Date of Audit")
+    # -------------------------------Grid Details-------------------------------------------------------------------  
+    connects_to_grid = models.BooleanField(default=False, null=True, blank=True, verbose_name="Is the Facility conneted to the Grid?")
+    reasons = models.CharField(max_length=200, null=True, blank=True, help_text="If not connected, state reasons.")
+    grid_quality = models.CharField(max_length=80, null=True, blank=True, verbose_name="Grid Quality")
+    grid_availability = models.IntegerField(null=True, blank=True, help_text='How many hours out of 24 do you get on an average?', verbose_name="Grid Availability")
+    day = models.PositiveIntegerField()
+    night = models.PositiveIntegerField()
+    transformer_1 = models.CharField(max_length=100, null=True, blank=True,help_text='State the type(step up/down), Breaker Size, location and the rating In kVA for each')
+    transformer_2 = models.CharField(max_length=100, null=True, blank=True)
+    transformer_3 = models.CharField(max_length=100, null=True, blank=True)
+    transformer_4 = models.CharField(max_length=100, null=True, blank=True)
+    transformer_5 = models.CharField(max_length=100, null=True, blank=True)
+    transformer_6 = models.CharField(max_length=100, null=True, blank=True)
+    transformer_7 = models.CharField(max_length=100, null=True, blank=True)
+    transformer_8 = models.CharField(max_length=100, null=True, blank=True)
+    transformer_9 = models.CharField(max_length=100, null=True, blank=True)
+    transformer_10 = models.CharField(max_length=100, null=True, blank=True)
+    tariff = models.CharField(max_length=100, null=True, blank=True, help_text='cost per kWh')
+    # ----------------------------------------Generator Details------------------------------------------------------
+    genset_1 = models.CharField(max_length=60, null=True, blank=True,help_text='State the type (GG or GG), Make, Ownership, Engine Run-Hour, Breaker Size, Controller Type&Model, location and the rating in kVA or kW for each')
+    genset_2 = models.CharField(max_length=60, null=True, blank=True)
+    genset_3 = models.CharField(max_length=60, null=True, blank=True)
+    genset_4 = models.CharField(max_length=60, null=True, blank=True)
+    genset_5 = models.CharField(max_length=60, null=True, blank=True)
+    genset_6 = models.CharField(max_length=60, null=True, blank=True)
+    #  Page 2
+    # ------------------------------------Power Euipment---------------------------------------------- 
+    switching_mode = models.CharField(max_length=30, null=True, blank=True, verbose_name="Whta is the mode of Switching Power?")
+    availability_of_synchPanel = models.BooleanField(default=False, blank=True, verbose_name="Is there a Synchronization Panel?")
+    synchPanelSize = models.CharField(max_length=200, null=True, blank=True, verbose_name="What Voltage Level is the Panel?")
+    spareBreaker = models.BooleanField(null=True, blank=True, verbose_name="Is there a Spare Breaker at the Injection Point?")
+    breakerSize = models.CharField(max_length=100, null=True, blank=True, verbose_name="Is there a Spare Breaker at the Injection Point?")
     
-
-
-class CommercialIndustryPageTwo(models.Model):
-    roof_space_available = models.IntegerField(null=True, blank=True, help_text='square meters') 
-    roof_type = models.CharField(max_length=200, null=True, blank=True, help_text='Flat, Mono-Pitch, Double-Pitch, Specify if others')
-    roof_material = models.CharField(max_length=30, null=True, blank=True, help_text='Concrete slab, Aluminum, Ardex, Specify if others')
-    roofing_sheet_thickness = models.IntegerField(null=True, help_text='if Aluminum')
-    roofing_sheet_lapping = models.CharField(max_length=40, null=True, blank=True)
-    roofing_truss_material = models.CharField(max_length=40, null=True, blank=True)
-    roof_picture = models.ImageField(default='default6.jpg',  upload_to='r_pics')
-    ground_space_picture = models.ImageField(default='default7.jpg',  upload_to='gs_pics')
-    ground_space_available = models.IntegerField(null=True, blank=True, help_text='square meters') 
-    equipment_room_availability = models.BooleanField()
-    size_of_equipment_room = models.IntegerField(null=True, blank=True, help_text='square meters')
-    ER_picture_or_space_to_build = models.ImageField(default='default8.jpg',  upload_to='er_pics')
-    panel_room_picture = models.ImageField(default='default9.jpg',  upload_to='pr_pics')
-    roof_to_ER_distance = models.IntegerField(null=True, blank=True, help_text='meters')
-    ER_to_power_room_distance = models.IntegerField(null=True, blank=True, help_text='meters')
-    pv_genset = models.BooleanField(_("PV-GENSET SOLUTION + GRID"), null=True, blank=True)
-    grid_tied = models.BooleanField(_("GRID-TIED SOLUTION"), null=True, blank=True)
-    BESS = models.BooleanField(_("BESS SOLUTION"), null=True, blank=True)
+    # -------------------------------------------Load Details-------------------------------------------
+    minimum_load = models.CharField(max_length=30,null=True, blank=True, help_text='kW',verbose_name="Minimum Load") 
+    average_dayLoad = models.CharField(max_length=30,null=True, blank=True, help_text='kW', verbose_name="Average Load") 
+    average_nightLoad = models.CharField(max_length=30,null=True, blank=True, help_text='kW', verbose_name="Average Night Load") 
+    maximum_load = models.CharField(max_length=30,null=True, blank=True, help_text='kW', verbose_name="Maximum Load") 
+    daily_consumption = models.CharField(max_length=30,null=True, blank=True, help_text='kWh', verbose_name="Average Daily Energy Consumption") 
+    #------------------------------------------Bacup System------------------------------------------
+    backupSize = models.DecimalField(max_digits=12, decimal_places=10, null=True, blank=True, verbose_name="Size of Critical Load (kW)")
+    # ------------------------------Building and Mounting Planes----------------------------------------
+    building_type = models.CharField(max_length=100, default=False, help_text='State the building type and other information as below.', verbose_name="Building Type")
+    roof_space_1 = models.IntegerField(null=True, blank=True, help_text='square meters', verbose_name="Roof Space 1")
+    roof_space_2 = models.IntegerField(null=True, blank=True, help_text='square meters', verbose_name="Roof Space 2")
+    roof_space_3 = models.IntegerField(null=True, blank=True, help_text='square meters', verbose_name="Roof Space 3")
+    roof_space_4 = models.IntegerField(null=True, blank=True, help_text='square meters', verbose_name="Roof Space 4")
+    roofing_truss_material = models.CharField(max_length=100, null=True, blank=True, verbose_name="Roofing Truss Material")  
+    roofing_sheet_thickness = models.CharField(max_length=100, null=True, blank=True, verbose_name="Roofing Sheet Thickness (mm)")
+    roofing_truss_spacing =  models.DecimalField(max_digits=8, decimal_places=4, null=True, verbose_name="Roofing Truss Spacing")
+    roof_picture = models.ImageField(default='default1.jpg', upload_to='roof_pics', null=True, blank=True, verbose_name="Roof Picture")
+    ground_space_1 = models.IntegerField(null=True, blank=True, help_text='square meters', verbose_name="Ground Space 1")
+    ground_space_2 = models.IntegerField(null=True, blank=True, help_text='square meters', verbose_name="Ground Space 2")
+    ground_space_picture = models.ImageField(default='default2.jpg',  upload_to='gs_pics', verbose_name="Attach picture of the Ground Space")
+    #---------------------------------- Equipment Room------------------------------------
+    equipment_room_availability = models.BooleanField(verbose_name="Is Equipment Room Available?")
+    size_of_equipment_room = models.IntegerField(null=True, blank=True, help_text='square meters', verbose_name="Size of Equipment Room")
+    ER_picture_or_space_to_build = models.ImageField(default='default3.jpg',  upload_to='er_pics', verbose_name="Please attach the picture")
+    distance_to_generator = models.CharField(max_length=80, null=True, blank=True, verbose_name="State the distance from the ER to the generator")
+    panel_room_picture = models.ImageField(default='default4.jpg',  upload_to='pr_pics', verbose_name="Existing Power Room Picture")
+    roof_to_ER_distance = models.IntegerField(null=True, blank=True, help_text='meters', verbose_name="State the distance from the  ER to the roof")
+    ER_to_power_room_distance = models.IntegerField(null=True, blank=True, help_text='meters', verbose_name="State the distance from the  ER to the existing Power Room")
+    #------------------------------------------Operation Hour--------------------------
     opening_time = models.TimeField(null=True, blank=True, help_text='State in 24-hours format')
     closing_time = models.TimeField(null=True, blank=True, help_text='State in 24-hours format')
-    starsight_rep = models.CharField(_('Starsight Representative'),max_length=50, null=True, blank=True)
-    contact_number = models.CharField(max_length=30, null=True, blank=True)
-    station_rep = models.CharField(_("Station Representative"),max_length=30, null=True, blank=True)
-    contact_number = models.CharField(max_length=30, null=True, blank=True)
-    comment = models.TextField(_("General Comments"), null=True, blank=True) 
+    #------------------------------------------Sign Off--------------------------
+    client_rep = models.CharField(max_length=150, null=True, blank=True, verbose_name="Customer Representative's Name")
+    position = models.CharField(max_length=80, null=True, blank=True)
+    client_repPhone = models.PositiveIntegerField(null=True, blank=True, verbose_name="Contact Number")
+    email = models.CharField(max_length=100, null=True, blank=True)
+    GeneralComment = models.TextField(null=True, blank=True, verbose_name="General Comments")
+    created_at = models.DateTimeField(auto_now_add=True)
 
-   
-class ChecklistForCandI(models.Model):
-    page_one = models.OneToOneField("audits.CommercialIndustryPageOne", verbose_name=_("Client Detail | Existing Power and Load Information"), on_delete=models.CASCADE)
-    page_two = models.OneToOneField("audits.CommercialIndustryPageTwo", verbose_name=_("Mounting Planes | Equipment Room | Solution Type"), on_delete=models.CASCADE)
-   
+    class Meta:
+        verbose_name_plural = "Checklist For C&I"
+    
+    def __str__(self):
+        if (self.vendor or self.client or self.branch) != None: 
+            return f"{self.vendor} | {self.client} | {self.branch}"
+        else:
+            return "vendor or client or branch field was not filled."
+
+

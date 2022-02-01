@@ -17,23 +17,20 @@
 <div class="col-md-6 col-lg">
     <div class="msg">
         {% if wizard.steps.index == 0 %}
-        <h3>Customer's Information | Cooling Information | Mounting Planes and Lighting Deatails</h3>
-        <h5>Kindly fill as appropriate.</h5>
+            <h3>Customer's Information | Cooling Information | Lighting Details</h3>
+            <h5>Kindly fill as appropriate.</h5>
         {% elif wizard.steps.index == 1 %}
-        <h3>Electrical Appliances</h3>
-        <h5>Enter the counts of each of the appliances as listed below.</h5>
+            <h3>Electrical Appliances</h3>
+            <h5>Enter the counts of each of the appliances as listed below.</h5>
         {% elif wizard.steps.index == 2 %}
-        <h3>Existing Power | Critical Loads | Backup Information</h3>
-        <h5>All values must be in kVA except stated otherwise.</h5>
+            <h3>Existing Power | Critical Loads | Backup Information</h3>
+            <h5>All values should be in kVA or kW.</h5>
         {% elif wizard.steps.index == 3 %}
-        <h3>Client's Operation Mode | Equipment Room and Building Information</h3>
+            <h3>Building Information</h3>
         
         {% elif wizard.steps.index == 4 %}
-        <h3>Safety</h3>
-        {% elif wizard.steps.index == 5 %}
-        <h3>Roof Details</h3>
-        {% elif wizard.steps.index == 6 %}
-        <h3>Client's Sign Off | General Comment</h3>
+            <h3> Equipment Room | Safety and Client's Sign Off </h3>
+                   
         {% endif %}
        
     </div>
@@ -43,23 +40,30 @@
     <form class="submission-form" action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <table>
-            {{ wizard.management_form }} {% if wizard.form.forms %} {{ wizard.form.management_form }} {% for form in wizard.form.forms %} {% bootstrap_form form %} {% endfor %} {% else %}
-            <p><strong>{% bootstrap_form wizard.form %}</strong></p> 
+            {{ wizard.management_form }} 
+            
+            {% if wizard.form.forms %} 
+                {{ wizard.form.management_form }} 
+                {% for form in wizard.form.forms %} 
+                    {% bootstrap_form form %} 
+                {% endfor %} 
+            {% else %}
+                <p><strong>{% bootstrap_form wizard.form %}</strong></p> 
             
             {% endif %}
         </table>
         {% if wizard.steps.prev %}
-        <button class="btn btn-primary" name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">
-          {% trans "first step" %}
-        </button>
-        <button class="btn btn-primary" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">
-          {% trans "previous step" %}
-        </button> 
+            <button class="btn btn-primary" name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">
+            {% trans "first step" %}
+            </button>
+            <button class="btn btn-primary" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">
+            {% trans "previous step" %}
+            </button> 
         {% endif %}
-        {% if wizard.steps.index < 6 %}
-        <input class="btn btn-primary" type="submit" value="{% trans 'next' %}" />
-        {% elif wizard.steps.index == 6 %}
-        <input class="btn btn-primary" type="submit" value="{% trans 'submit' %}" />
+        {% if wizard.steps.index < 4 %}
+            <input class="btn btn-primary" type="submit" value="{% trans 'next' %}" />
+        {% elif wizard.steps.index == 4 %}
+            <input class="btn btn-primary" type="submit" value="{% trans 'submit' %}" />
         {% endif %}
     </form>
 </div>

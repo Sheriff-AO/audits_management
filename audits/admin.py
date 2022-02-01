@@ -8,13 +8,7 @@ from .models import *
 admin.site.register(Client)
 admin.site.register(Vendor)
 admin.site.register(Schedule)
-admin.site.register(PageOne)
-admin.site.register(PageTwo)
-admin.site.register(PageThree)
-admin.site.register(PageFour)
-admin.site.register(PageFive)
-admin.site.register(PageSix)
-admin.site.register(PageSeven)
+
 
 
 
@@ -50,7 +44,7 @@ class ChecklistResource(resources.ModelResource):
 
 
     class Meta:
-        model = ChecklistForBank
+        model = Checklist
         def genarate_fields_including_related_model(model):
             fields_in_model = []
             for field in model._meta.get_fields():
@@ -101,7 +95,7 @@ class ChecklistResource_2(resources.ModelResource):
 
 
     class Meta:
-        model = ChecklistForFillingStation
+        model = Checklist2
         def genarate_fields_including_related_model(model):
             fields_in_model = []
             for field in model._meta.get_fields():
@@ -152,7 +146,7 @@ class ChecklistResource_3(resources.ModelResource):
 
 
     class Meta:
-        model = ChecklistForCandI
+        model = Checklist3
         def genarate_fields_including_related_model(model):
             fields_in_model = []
             for field in model._meta.get_fields():
@@ -174,15 +168,15 @@ class ChecklistResource_3(resources.ModelResource):
 
 
 
-@admin.register(ChecklistForBank)
+@admin.register(Checklist)
 class ViewAdmin(ImportExportModelAdmin):
     resource_class = ChecklistResource
 
-@admin.register(ChecklistForFillingStation)
+@admin.register(Checklist2)
 class ViewAdmin(ImportExportModelAdmin):
     resource_class = ChecklistResource_2
 
-@admin.register(ChecklistForCandI)
+@admin.register(Checklist3)
 class ViewAdmin(ImportExportModelAdmin):
     resource_class = ChecklistResource_3
 

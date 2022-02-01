@@ -17,13 +17,16 @@
 <div class="col-md-6 col-lg">
     <div class="msg">
         {% if wizard.steps.index == 0 %}
-        <h3>Pumps | Cooling and Lighting Information</h3>
+        <h3>Customer's Information | Pumps and Cooling Details</h3>
         <h5>Kindly fill as appropriate.</h5>
         {% elif wizard.steps.index == 1 %}
-        <h3>Appliances | Roof Detail and Operation Hour Information</h3>
+        <h3>Lightings and Electrical Appliances </h3>
+
+        {% elif wizard.steps.index == 2 %}
+        <h3>Building | Operation Hour | Safety and Sign Off</h3>
 
        
-        {% endif %}
+        {% endif %} 
        
     </div>
 </div>
@@ -48,6 +51,8 @@
         {% if wizard.steps.index < 1 %}
         <input class="btn btn-primary" type="submit" value="{% trans 'next' %}" />
         {% elif wizard.steps.index == 1 %}
+        <input class="btn btn-primary" type="submit" value="{% trans 'next' %}" />
+        {% elif wizard.steps.index == 2 %}
         <input class="btn btn-primary" type="submit" value="{% trans 'submit' %}" />
         {% endif %}
     </form>

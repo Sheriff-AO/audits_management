@@ -24,8 +24,9 @@ urlpatterns = [
     path('update-vendor/<int:pk>/', VendorUpdate.as_view(), name='update-vendor'),
     path('delete-vendor/<int:pk>/', views.deleteVendor, name='delete-vendor'),
     path('site-schedule/', views.createSchedule, name='create-schedule'),
-    path('checklist/', ChecklistWizardView.as_view(), name='checklist'),
-    path('checklist_two/', ChecklistTwoWizardView.as_view(), name='checklist-two'),
-    path('checklist_three/', ChecklistThreeWizardView.as_view(), name='checklist-three'),
+    path('checklist-banks/', ChecklistWizardView.as_view(), name='checklist-banks'),
+    path('checklist_fuel&gas-stations/', ChecklistTwoWizardView.as_view(), name='checklist-fuel&gas-stations'),
+    path('checklist_c&i/', ChecklistThreeWizardView.as_view(), name='checklist-c&i'),
+    path('summary/', views.summary, name='summary'),
   
 ]

@@ -1,0 +1,123 @@
+{% extends 'base.html' %} 
+{% block title %}
+    Summary
+{% endblock title %}
+
+
+
+{% block content %}
+        
+<div class="row">
+    <div class="col">
+        <div class="col-md">
+            <div class="card text-center text-black mb-3" id="total-sites">
+                <div class="card-header ">
+                    <h5 class="card-title text-black">Total Sites</h5>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">{{ sites }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="col-md">
+            <div class="card text-center text-black mb-3" id="total-sites">
+                <div class="card-header ">
+                    <h5 class="card-title text-black">Audited Sites</h5>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">{{ audited }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="col-md">
+            <div class="card text-center text-black mb-3" id="total-sites">
+                <div class="card-header ">
+                    <h5 class="card-title text-black">Pending Audit</h5>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">{{ pendingAudit }}</h3>
+                </div>
+            </div>
+        </div>
+    </div> 
+</div>
+
+<div class="row">
+    <div class="col">
+        <div class="col-md">
+            <div class="card text-center text-black mb-3" id="total-sites">
+                <div class="card-header ">
+                    <h5 class="card-title text-black">SMEs Clients</h5>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">{{ smesClients }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="col-md">
+            <div class="card text-center text-black mb-3" id="total-sites">
+                <div class="card-header ">
+                    <h5 class="card-title text-black">C&I Clients</h5>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">{{ candIClients }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="col-md">
+            <div class="card text-center text-black mb-3" id="total-sites">
+                <div class="card-header ">
+                    <h5 class="card-title">Total Clients</h5>
+                </div>
+                <div class="card-body text-black">
+                    <h3 class="card-title">{{ totalClients }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+</div>
+
+<div class="row">
+    <div class="col">
+        <div class="col-md">
+            <div class="card text-center text-black mb-3" id="total-sites">
+                <div class="card-header ">
+                    <h5 class="card-title text-black">Vendors</h5>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">{{ vendors }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="col-md">
+            <div class="card text-center text-black mb-3" id="total-sites">
+                <div class="card-header ">
+                    <h5 class="card-title text-black">Total Schedules</h5>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">{{ schedules }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+</div>
+
+
+{% endblock %}
